@@ -1,0 +1,7 @@
+ktor:
+  deployment:
+    port: 8080
+  application:
+    modules:
+      - com.github.yuk1ty.todoAppKt.ApplicationKt.module
+      - n
