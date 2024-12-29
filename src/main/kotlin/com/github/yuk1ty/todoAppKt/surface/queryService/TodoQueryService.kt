@@ -7,6 +7,8 @@ import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodo
 
 class TodoQueryService {
     fun getTodos(): Result<List<ValidatedTodo>, DomainErrors> = binding {
+        // TODO: ValidatedTodo shouldn't be used here.
+        // TODO: This is a tentative solution to make the code work.
         val allTodos = ValidatedTodo(
             title = "title",
             description = "description",

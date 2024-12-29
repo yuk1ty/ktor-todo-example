@@ -18,4 +18,17 @@ object Strings {
             }
         }
     }
+
+    @JvmInline
+    value class String2048 private constructor(val value: String) {
+        companion object {
+            operator fun invoke(value: String): Result<String2048, DomainErrors> {
+                return if (value.length <= 2048) {
+                    Ok(String2048(value))
+                } else {
+                    Err(DomainErrors.ValidationError("String length must be less than or equal to 2048"))
+                }
+            }
+        }
+    }
 }

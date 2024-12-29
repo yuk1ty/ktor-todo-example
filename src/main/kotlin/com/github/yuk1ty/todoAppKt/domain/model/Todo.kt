@@ -6,6 +6,7 @@ import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.binding
 import com.github.yuk1ty.todoAppKt.domain.error.DomainErrors
 import com.github.yuk1ty.todoAppKt.domain.model.common.Strings.String1024
+import com.github.yuk1ty.todoAppKt.domain.model.common.Strings.String2048
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -14,7 +15,7 @@ import java.util.UUID
 data class ValidatedTodo private constructor(
     val id: TodoId,
     val title: String1024,
-    val description: String1024,
+    val description: String2048,
     val due: TodoDue,
     val status: TodoStatus
 ) {
@@ -28,7 +29,7 @@ data class ValidatedTodo private constructor(
             binding {
                 val id = UUID.randomUUID().let(::TodoId)
                 val title = String1024(title).bind()
-                val description = String1024(description).bind()
+                val description = String2048(description).bind()
                 val due = due.atOffset(ZoneOffset.UTC).let(::TodoDue)
                 val status = TodoStatus.fromString(status).bind()
                 ValidatedTodo(id, title, description, due, status)
