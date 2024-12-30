@@ -4,3 +4,14 @@ ktor:
   application:
     modules:
       - com.github.yuk1ty.todoAppKt.ApplicationKt.module
+db:
+  read:
+    driverClassName: "org.postgresql.Driver"
+    jdbcURL: "jdbc:postgresql://localhost:5432/todoAppKt"
+    user: "readonly"
+    password: "password"
+  write:
+    driverClassName: "org.postgresql.Driver"
+    jdbcURL: "jdbc:postgresql://localhost:5432/todoAppKt"
+    user: "writable"
+    password: "password"

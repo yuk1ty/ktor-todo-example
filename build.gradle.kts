@@ -29,6 +29,8 @@ dependencies {
     implementation(libs.koin.logger.slf4j)
     implementation(libs.logback.classic)
     implementation(libs.exposed.core)
+    implementation(libs.exposed.jdbc)
+    implementation(libs.postgres)
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
