@@ -2,10 +2,9 @@ package com.github.yuk1ty.todoAppKt.api.handler
 
 import com.github.michaelbull.result.binding
 import com.github.michaelbull.result.getOrThrow
-import com.github.michaelbull.result.unwrap
 import com.github.yuk1ty.todoAppKt.api.model.TodoResponse
 import com.github.yuk1ty.todoAppKt.api.routing.API_V1
-import com.github.yuk1ty.todoAppKt.surface.queryService.TodoQueryService
+import com.github.yuk1ty.todoAppKt.queryService.TodoQueryService
 import io.ktor.http.*
 import io.ktor.resources.*
 import io.ktor.server.application.*

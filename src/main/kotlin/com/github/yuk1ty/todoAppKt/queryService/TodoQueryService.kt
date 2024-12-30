@@ -1,4 +1,4 @@
-package com.github.yuk1ty.todoAppKt.surface.queryService
+package com.github.yuk1ty.todoAppKt.queryService
 
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.binding

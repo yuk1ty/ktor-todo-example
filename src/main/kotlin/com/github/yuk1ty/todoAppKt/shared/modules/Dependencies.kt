@@ -1,6 +1,6 @@
 package com.github.yuk1ty.todoAppKt.shared.modules
 
-import com.github.yuk1ty.todoAppKt.surface.queryService.TodoQueryService
+import com.github.yuk1ty.todoAppKt.queryService.TodoQueryService
 import io.ktor.server.application.*
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
