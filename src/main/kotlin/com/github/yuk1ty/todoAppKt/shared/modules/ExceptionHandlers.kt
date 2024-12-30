@@ -7,8 +7,10 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 
 fun StatusPagesConfig.registerDomainExceptions() {
-    exception<DomainErrors.ValidationError> { call, cause ->
-        call.respondText(status = HttpStatusCode.BadRequest, text = cause.why)
+    exception<DomainErrors> { call, cause ->
+        when (cause) {
+            is DomainErrors.ValidationError -> call.respondText(status = HttpStatusCode.BadRequest, text = cause.why)
+        }
     }
 }
 
