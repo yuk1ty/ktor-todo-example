@@ -10,7 +10,7 @@ sealed interface Permission {
 }
 
 @JvmInline
-value class DatabaseConn<K: Permission>(val inner: Database) {
+value class DatabaseConn<K : Permission>(val inner: Database) {
     companion object {
         fun establishRead(conn: Database): DatabaseConn<Permission.ReadOnly> = DatabaseConn(conn)
         fun establishWrite(conn: Database): DatabaseConn<Permission.Writable> = DatabaseConn(conn)
