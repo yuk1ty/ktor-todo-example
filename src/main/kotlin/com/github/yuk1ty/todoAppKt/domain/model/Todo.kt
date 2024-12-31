@@ -1,9 +1,6 @@
 package com.github.yuk1ty.todoAppKt.domain.model
 
-import com.github.michaelbull.result.Err
-import com.github.michaelbull.result.Ok
-import com.github.michaelbull.result.Result
-import com.github.michaelbull.result.binding
+import com.github.michaelbull.result.*
 import com.github.yuk1ty.todoAppKt.domain.error.DomainErrors
 import com.github.yuk1ty.todoAppKt.domain.model.common.Strings.String1024
 import com.github.yuk1ty.todoAppKt.domain.model.common.Strings.String2048
@@ -15,7 +12,7 @@ import java.util.UUID
 data class ValidatedTodo private constructor(
     val id: TodoId,
     val title: String1024,
-    val description: String2048,
+    val description: String2048?,
     val due: TodoDue,
     val status: TodoStatus
 ) {
@@ -25,15 +22,20 @@ data class ValidatedTodo private constructor(
             description: String,
             due: LocalDateTime,
             status: String
-        ): Result<ValidatedTodo, DomainErrors> =
-            binding {
-                val id = UUID.randomUUID().let(::TodoId)
-                val title = String1024(title).bind()
-                val description = String2048(description).bind()
-                val due = due.atOffset(ZoneOffset.UTC).let(::TodoDue)
-                val status = TodoStatus.fromString(status).bind()
-                ValidatedTodo(id, title, description, due, status)
-            }
+        ): Result<ValidatedTodo, DomainErrors.ValidationErrors> =
+            zipOrAccumulate(
+                { String1024(title) },
+                { String2048(description) },
+                { TodoStatus.fromString(status) },
+            ) { validatedTitle, validatedDescription, validatedStatus ->
+                ValidatedTodo(
+                    id = TodoId(UUID.randomUUID()),
+                    title = validatedTitle,
+                    description = validatedDescription,
+                    due = TodoDue(due.atOffset(ZoneOffset.UTC)),
+                    status = validatedStatus
+                )
+            }.mapError { DomainErrors.ValidationErrors(it) }
     }
 }
 
@@ -51,7 +53,7 @@ enum class TodoStatus {
     Archived;
 
     companion object {
-        fun fromString(value: String): Result<TodoStatus, DomainErrors> {
+        fun fromString(value: String): Result<TodoStatus, DomainErrors.ValidationError> {
             return when (value) {
                 "Ready" -> Ok(Ready)
                 "InProgress" -> Ok(InProgress)

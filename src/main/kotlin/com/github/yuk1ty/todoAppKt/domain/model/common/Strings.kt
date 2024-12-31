@@ -9,7 +9,7 @@ object Strings {
     @JvmInline
     value class String1024 private constructor(val value: String) {
         companion object {
-            operator fun invoke(value: String): Result<String1024, DomainErrors> {
+            operator fun invoke(value: String): Result<String1024, DomainErrors.ValidationError> {
                 return if (value.length <= 1024) {
                     Ok(String1024(value))
                 } else {
@@ -22,7 +22,7 @@ object Strings {
     @JvmInline
     value class String2048 private constructor(val value: String) {
         companion object {
-            operator fun invoke(value: String): Result<String2048, DomainErrors> {
+            operator fun invoke(value: String): Result<String2048, DomainErrors.ValidationError> {
                 return if (value.length <= 2048) {
                     Ok(String2048(value))
                 } else {

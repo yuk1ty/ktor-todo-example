@@ -11,6 +11,7 @@ fun StatusPagesConfig.registerDomainExceptions() {
     exception<AppErrors> { call, cause ->
         when (cause) {
             is DomainErrors.ValidationError -> call.respondText(status = HttpStatusCode.BadRequest, text = cause.why)
+            is DomainErrors.ValidationErrors -> call.respondText(status = HttpStatusCode.BadRequest, text = cause.errors.joinToString(", "))
         }
     }
 }
