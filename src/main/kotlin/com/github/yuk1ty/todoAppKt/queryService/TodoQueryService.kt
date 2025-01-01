@@ -6,15 +6,15 @@ import com.github.michaelbull.result.combine
 import com.github.yuk1ty.todoAppKt.adapter.database.DatabaseConn
 import com.github.yuk1ty.todoAppKt.adapter.database.Permission
 import com.github.yuk1ty.todoAppKt.adapter.database.TodoTable
-import com.github.yuk1ty.todoAppKt.adapter.database.beginRead
+import com.github.yuk1ty.todoAppKt.adapter.database.beginReadTransaction
 import com.github.yuk1ty.todoAppKt.adapter.models.TodoRow
-import com.github.yuk1ty.todoAppKt.domain.error.AppErrors
 import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodoDTO
+import com.github.yuk1ty.todoAppKt.shared.AppErrors
 import org.jetbrains.exposed.sql.selectAll
 
 class TodoQueryService(private val conn: DatabaseConn<Permission.ReadOnly>) {
     fun getTodos(): Result<List<ValidatedTodoDTO>, AppErrors> = binding {
-        val allTodosFromDatabase = conn.beginRead {
+        val allTodosFromDatabase = conn.beginReadTransaction {
             TodoTable.selectAll().map { row ->
                 TodoRow(
                     id = row[TodoTable.id],
@@ -26,7 +26,7 @@ class TodoQueryService(private val conn: DatabaseConn<Permission.ReadOnly>) {
                     updatedAt = row[TodoTable.updatedAt]
                 )
             }.toList()
-        }
+        }.bind()
         val validatedTodos = allTodosFromDatabase.map {
             it.run {
                 ValidatedTodoDTO(id, title, description, due, status, createdAt, updatedAt)
