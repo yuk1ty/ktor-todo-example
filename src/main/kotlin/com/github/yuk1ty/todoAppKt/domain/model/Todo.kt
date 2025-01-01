@@ -9,6 +9,45 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
 
+data class ValidatedTodoDTO private constructor(
+    val id: TodoId,
+    val title: String1024,
+    val description: String2048?,
+    val due: TodoDue,
+    val status: TodoStatus,
+    val createdAt: OffsetDateTime,
+    val updatedAt: OffsetDateTime
+) {
+    companion object {
+        // TODO: ideally here should represent the type transition as like Unvalidated -> Validated
+        // TODO: Maybe I need to make a new type like UnvalidatedTodoDTO
+        operator fun invoke(
+            id: UUID,
+            title: String,
+            description: String?,
+            due: LocalDateTime,
+            status: String,
+            createdAt: LocalDateTime,
+            updatedAt: LocalDateTime
+        ): Result<ValidatedTodoDTO, DomainErrors.ValidationErrors> =
+            zipOrAccumulate(
+                { String1024(title) },
+                { description?.let { String2048(it) } ?: Ok(null) },
+                { TodoStatus.fromString(status) },
+            ) { validatedTitle, validatedDescription, validatedStatus ->
+                ValidatedTodoDTO(
+                    id = TodoId(id),
+                    title = validatedTitle,
+                    description = validatedDescription,
+                    due = TodoDue(due.atOffset(ZoneOffset.UTC)),
+                    status = validatedStatus,
+                    createdAt = createdAt.atOffset(ZoneOffset.UTC),
+                    updatedAt = updatedAt.atOffset(ZoneOffset.UTC)
+                )
+            }.mapError { DomainErrors.ValidationErrors(it) }
+    }
+}
+
 data class ValidatedTodo private constructor(
     val id: TodoId,
     val title: String1024,

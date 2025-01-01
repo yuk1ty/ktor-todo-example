@@ -1,21 +1,10 @@
 package com.github.yuk1ty.todoAppKt.shared.modules
 
+import com.github.yuk1ty.todoAppKt.adapter.database.DatabaseConn
+import com.github.yuk1ty.todoAppKt.adapter.database.Permission
 import io.ktor.server.application.*
 import io.ktor.server.config.*
 import org.jetbrains.exposed.sql.Database
-
-sealed interface Permission {
-    data object ReadOnly : Permission
-    data object Writable : Permission
-}
-
-@JvmInline
-value class DatabaseConn<K : Permission>(val inner: Database) {
-    companion object {
-        fun establishRead(conn: Database): DatabaseConn<Permission.ReadOnly> = DatabaseConn(conn)
-        fun establishWrite(conn: Database): DatabaseConn<Permission.Writable> = DatabaseConn(conn)
-    }
-}
 
 internal fun Application.establishDatabaseConnection(cfg: ApplicationConfig): Pair<DatabaseConn<Permission.ReadOnly>, DatabaseConn<Permission.Writable>> {
     val read = cfg.run {

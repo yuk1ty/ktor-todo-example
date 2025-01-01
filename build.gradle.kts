@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.java.time)
     implementation(libs.postgres)
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }

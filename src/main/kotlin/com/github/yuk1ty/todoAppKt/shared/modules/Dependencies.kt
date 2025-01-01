@@ -1,5 +1,7 @@
 package com.github.yuk1ty.todoAppKt.shared.modules
 
+import com.github.yuk1ty.todoAppKt.adapter.database.DatabaseConn
+import com.github.yuk1ty.todoAppKt.adapter.database.Permission
 import com.github.yuk1ty.todoAppKt.queryService.TodoQueryService
 import io.ktor.server.application.*
 import org.koin.dsl.module
