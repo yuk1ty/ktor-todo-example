@@ -1,6 +1,6 @@
 package com.github.yuk1ty.todoAppKt.api.model
 
-import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodo
+import com.github.yuk1ty.todoAppKt.domain.model.UnvalidatedTodo
 import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodoDTO
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -34,6 +34,15 @@ internal data class TodoResponse(
 
 internal data class CreateTodoRequest(
     val title: String,
-    val description: String,
+    val description: String?,
     val due: LocalDateTime,
-)
+) {
+    fun intoDomain(): UnvalidatedTodo {
+        return UnvalidatedTodo(
+            title = title,
+            description = description,
+            due = due,
+            status = "Ready"
+        )
+    }
+}

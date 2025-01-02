@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.ktor.server.status.pages)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlin.result)
+    implementation(libs.kotlin.result.coroutines)
     implementation(libs.koin.core)
     implementation(libs.koin.ktor)
     implementation(libs.koin.logger.slf4j)

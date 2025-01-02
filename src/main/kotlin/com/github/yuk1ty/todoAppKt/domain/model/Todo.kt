@@ -52,6 +52,28 @@ data class ValidatedTodoDTO private constructor(
     }
 }
 
+data class UnvalidatedTodo private constructor(
+    val title: String,
+    val description: String?,
+    val due: LocalDateTime,
+    val status: String
+) {
+    companion object {
+        operator fun invoke(
+            title: String,
+            description: String?,
+            due: LocalDateTime,
+            status: String
+        ): UnvalidatedTodo =
+            UnvalidatedTodo(
+                title = title,
+                description = description,
+                due = due,
+                status = status
+            )
+    }
+}
+
 data class ValidatedTodo private constructor(
     val id: TodoId,
     val title: String1024,
@@ -61,14 +83,11 @@ data class ValidatedTodo private constructor(
 ) {
     companion object {
         operator fun invoke(
-            title: String,
-            description: String,
-            due: LocalDateTime,
-            status: String
-        ): Result<ValidatedTodo, DomainErrors.ValidationErrors> =
+            unvalidatedTodo: UnvalidatedTodo
+        ): Result<ValidatedTodo, DomainErrors.ValidationErrors> = unvalidatedTodo.run {
             zipOrAccumulate(
                 { String1024(title) },
-                { String2048(description) },
+                { description?.let { String2048(it) } ?: Ok(null) },
                 { TodoStatus.fromString(status) },
             ) { validatedTitle, validatedDescription, validatedStatus ->
                 ValidatedTodo(
@@ -79,6 +98,7 @@ data class ValidatedTodo private constructor(
                     status = validatedStatus
                 )
             }.mapError { DomainErrors.ValidationErrors(it) }
+        }
     }
 }
 
@@ -106,5 +126,13 @@ enum class TodoStatus {
                 else -> Err(DomainErrors.ValidationError("Invalid TodoStatus"))
             }
         }
+    }
+
+    fun asString(): String = when (this) {
+        Ready -> "Ready"
+        InProgress -> "InProgress"
+        Done -> "Done"
+        Suspended -> "Suspended"
+        Archived -> "Archived"
     }
 }

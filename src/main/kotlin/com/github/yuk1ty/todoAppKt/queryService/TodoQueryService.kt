@@ -3,6 +3,7 @@ package com.github.yuk1ty.todoAppKt.queryService
 import com.github.michaelbull.result.Result
 import com.github.michaelbull.result.binding
 import com.github.michaelbull.result.combine
+import com.github.michaelbull.result.coroutines.coroutineBinding
 import com.github.yuk1ty.todoAppKt.adapter.database.DatabaseConn
 import com.github.yuk1ty.todoAppKt.adapter.database.Permission
 import com.github.yuk1ty.todoAppKt.adapter.database.TodoTable
@@ -13,7 +14,7 @@ import com.github.yuk1ty.todoAppKt.shared.AppErrors
 import org.jetbrains.exposed.sql.selectAll
 
 class TodoQueryService(private val conn: DatabaseConn<Permission.ReadOnly>) {
-    fun getTodos(): Result<List<ValidatedTodoDTO>, AppErrors> = binding {
+    suspend fun getTodos(): Result<List<ValidatedTodoDTO>, AppErrors> = coroutineBinding {
         val allTodosFromDatabase = conn.beginReadTransaction {
             TodoTable.selectAll().map { TodoRow.fromResultRow(it) }.toList()
         }.bind()
