@@ -1,5 +1,7 @@
 CREATE DATABASE todo_app_kt;
 
+\c todo_app_kt;
+
 CREATE ROLE readonly WITH LOGIN PASSWORD 'password';
 ALTER ROLE readonly WITH LOGIN;
 GRANT CONNECT ON DATABASE todo_app_kt TO readonly;

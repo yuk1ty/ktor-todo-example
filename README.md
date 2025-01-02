@@ -17,7 +17,7 @@ docker-compose up -d
 > You need to install `sqldef` in advance before running the following commands. Please see https://github.com/sqldef/sqldef.
 
 ```
-psqldef -U writable -P password < migration/v0.sql
+psqldef -U postgres -W password todo_app_kt < migration/v0.sql
 ```
 
 ### Run the application

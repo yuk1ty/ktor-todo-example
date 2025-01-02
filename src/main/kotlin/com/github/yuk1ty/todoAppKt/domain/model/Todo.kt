@@ -29,8 +29,6 @@ data class ValidatedTodoDTO private constructor(
     val updatedAt: OffsetDateTime
 ) {
     companion object {
-        // TODO: ideally here should represent the type transition as like Unvalidated -> Validated
-        // TODO: Maybe I need to make a new type like UnvalidatedTodoDTO
         operator fun invoke(
             from: UnvalidatedTodoDTO
         ): Result<ValidatedTodoDTO, DomainErrors.ValidationErrors> =
