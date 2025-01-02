@@ -13,7 +13,7 @@ data class UnvalidatedTodoDTO(
     val id: UUID,
     val title: String,
     val description: String?,
-    val due: LocalDateTime,
+    val due: LocalDateTime?,
     val status: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
@@ -23,7 +23,7 @@ data class ValidatedTodoDTO private constructor(
     val id: TodoId,
     val title: String1024,
     val description: String2048?,
-    val due: TodoDue,
+    val due: TodoDue?,
     val status: TodoStatus,
     val createdAt: OffsetDateTime,
     val updatedAt: OffsetDateTime
@@ -42,7 +42,7 @@ data class ValidatedTodoDTO private constructor(
                         id = TodoId(id),
                         title = validatedTitle,
                         description = validatedDescription,
-                        due = TodoDue(due.atOffset(ZoneOffset.UTC)),
+                        due = due?.let { TodoDue(it.atOffset(ZoneOffset.UTC)) },
                         status = validatedStatus,
                         createdAt = createdAt.atOffset(ZoneOffset.UTC),
                         updatedAt = updatedAt.atOffset(ZoneOffset.UTC)
@@ -55,14 +55,14 @@ data class ValidatedTodoDTO private constructor(
 data class UnvalidatedTodo private constructor(
     val title: String,
     val description: String?,
-    val due: LocalDateTime,
+    val due: LocalDateTime?,
     val status: String
 ) {
     companion object {
         operator fun invoke(
             title: String,
             description: String?,
-            due: LocalDateTime,
+            due: LocalDateTime?,
             status: String
         ): UnvalidatedTodo =
             UnvalidatedTodo(
@@ -78,7 +78,7 @@ data class ValidatedTodo private constructor(
     val id: TodoId,
     val title: String1024,
     val description: String2048?,
-    val due: TodoDue,
+    val due: TodoDue?,
     val status: TodoStatus
 ) {
     companion object {
@@ -94,7 +94,7 @@ data class ValidatedTodo private constructor(
                     id = TodoId(UUID.randomUUID()),
                     title = validatedTitle,
                     description = validatedDescription,
-                    due = TodoDue(due.atOffset(ZoneOffset.UTC)),
+                    due = due?.let { TodoDue(it.atOffset(ZoneOffset.UTC)) },
                     status = validatedStatus
                 )
             }.mapError { DomainErrors.ValidationErrors(it) }

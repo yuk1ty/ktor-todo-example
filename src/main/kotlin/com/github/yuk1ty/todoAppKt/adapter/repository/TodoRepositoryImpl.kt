@@ -21,7 +21,7 @@ class TodoRepositoryImpl(private val conn: DatabaseConn<Permission.Writable>) : 
                 id = id.value,
                 title = title.value,
                 description = description?.value,
-                due = due.value.toLocalDateTime(),
+                due = due?.value?.toLocalDateTime(),
                 status = status.asString(),
                 createdAt = LocalDateTime.now(),
                 updatedAt = LocalDateTime.now(),

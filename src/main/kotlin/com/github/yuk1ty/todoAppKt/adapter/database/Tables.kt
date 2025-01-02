@@ -7,7 +7,7 @@ object TodoTable : Table() {
     val id = uuid("todo_id")
     val title = varchar("title", 1024)
     val description = varchar("description", 2048).nullable()
-    val due = datetime("due")
+    val due = datetime("due").nullable()
     val status = varchar("status", 32)
     val createdAt = datetime("created_at")
     val updatedAt = datetime("updated_at")

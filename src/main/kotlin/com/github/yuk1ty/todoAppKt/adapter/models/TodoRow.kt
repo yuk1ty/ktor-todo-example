@@ -10,7 +10,7 @@ data class TodoRow(
     val id: UUID,
     val title: String,
     val description: String?,
-    val due: LocalDateTime,
+    val due: LocalDateTime?,
     val status: String,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+
 plugins {
     application
     kotlin("jvm") version "2.1.0"
@@ -36,6 +38,14 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
+// Shut up calling `copy` function against data classes that have private constructors.
+tasks {
+    named("compileKotlin", KotlinCompilationTask::class.java) {
+        compilerOptions {
+            freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
+        }
+    }
+}
 tasks.test {
     useJUnitPlatform()
 }

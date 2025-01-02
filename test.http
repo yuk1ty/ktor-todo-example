@@ -1,0 +1,13 @@
+POST http://localhost:8080/api/v1/todos
+Content-Type: application/json
+
+{
+  "title": "Learn Ktor",
+  "description": "Learn how to create a RESTful API with Ktor",
+  "due": null
+}
+
+###
+
+GET http://localhost:8080/api/v1/todos
+Accept: application/json
