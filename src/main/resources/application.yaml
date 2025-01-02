@@ -7,11 +7,11 @@ ktor:
 db:
   read:
     driverClassName: "org.postgresql.Driver"
-    jdbcURL: "jdbc:postgresql://localhost:5432/todoAppKt"
+    jdbcURL: "jdbc:postgresql://localhost:5432/todo_app_kt"
     user: "readonly"
     password: "password"
   write:
     driverClassName: "org.postgresql.Driver"
-    jdbcURL: "jdbc:postgresql://localhost:5432/todoAppKt"
+    jdbcURL: "jdbc:postgresql://localhost:5432/todo_app_kt"
     user: "writable"
     password: "password"
