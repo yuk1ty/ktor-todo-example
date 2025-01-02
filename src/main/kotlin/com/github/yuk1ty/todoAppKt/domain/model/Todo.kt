@@ -9,6 +9,16 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.UUID
 
+data class UnvalidatedTodoDTO(
+    val id: UUID,
+    val title: String,
+    val description: String?,
+    val due: LocalDateTime,
+    val status: String,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
+)
+
 data class ValidatedTodoDTO private constructor(
     val id: TodoId,
     val title: String1024,
@@ -22,29 +32,25 @@ data class ValidatedTodoDTO private constructor(
         // TODO: ideally here should represent the type transition as like Unvalidated -> Validated
         // TODO: Maybe I need to make a new type like UnvalidatedTodoDTO
         operator fun invoke(
-            id: UUID,
-            title: String,
-            description: String?,
-            due: LocalDateTime,
-            status: String,
-            createdAt: LocalDateTime,
-            updatedAt: LocalDateTime
+            from: UnvalidatedTodoDTO
         ): Result<ValidatedTodoDTO, DomainErrors.ValidationErrors> =
-            zipOrAccumulate(
-                { String1024(title) },
-                { description?.let { String2048(it) } ?: Ok(null) },
-                { TodoStatus.fromString(status) },
-            ) { validatedTitle, validatedDescription, validatedStatus ->
-                ValidatedTodoDTO(
-                    id = TodoId(id),
-                    title = validatedTitle,
-                    description = validatedDescription,
-                    due = TodoDue(due.atOffset(ZoneOffset.UTC)),
-                    status = validatedStatus,
-                    createdAt = createdAt.atOffset(ZoneOffset.UTC),
-                    updatedAt = updatedAt.atOffset(ZoneOffset.UTC)
-                )
-            }.mapError { DomainErrors.ValidationErrors(it) }
+            from.run {
+                zipOrAccumulate(
+                    { String1024(title) },
+                    { description?.let { String2048(it) } ?: Ok(null) },
+                    { TodoStatus.fromString(status) },
+                ) { validatedTitle, validatedDescription, validatedStatus ->
+                    ValidatedTodoDTO(
+                        id = TodoId(id),
+                        title = validatedTitle,
+                        description = validatedDescription,
+                        due = TodoDue(due.atOffset(ZoneOffset.UTC)),
+                        status = validatedStatus,
+                        createdAt = createdAt.atOffset(ZoneOffset.UTC),
+                        updatedAt = updatedAt.atOffset(ZoneOffset.UTC)
+                    )
+                }.mapError { DomainErrors.ValidationErrors(it) }
+            }
     }
 }
 

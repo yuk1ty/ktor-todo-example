@@ -15,23 +15,11 @@ import org.jetbrains.exposed.sql.selectAll
 class TodoQueryService(private val conn: DatabaseConn<Permission.ReadOnly>) {
     fun getTodos(): Result<List<ValidatedTodoDTO>, AppErrors> = binding {
         val allTodosFromDatabase = conn.beginReadTransaction {
-            TodoTable.selectAll().map { row ->
-                TodoRow(
-                    id = row[TodoTable.id],
-                    title = row[TodoTable.title],
-                    description = row[TodoTable.description],
-                    due = row[TodoTable.due],
-                    status = row[TodoTable.status],
-                    createdAt = row[TodoTable.createdAt],
-                    updatedAt = row[TodoTable.updatedAt]
-                )
-            }.toList()
+            TodoTable.selectAll().map { TodoRow.fromResultRow(it) }.toList()
         }.bind()
-        val validatedTodos = allTodosFromDatabase.map {
-            it.run {
-                ValidatedTodoDTO(id, title, description, due, status, createdAt, updatedAt)
-            }
-        }.combine().bind()
+        val unvalidatedTodos = allTodosFromDatabase.map { it.intoDomain() }
+        // TODO: handle all errors
+        val validatedTodos = unvalidatedTodos.map { ValidatedTodoDTO(it) }.combine().bind()
 
         validatedTodos
     }
