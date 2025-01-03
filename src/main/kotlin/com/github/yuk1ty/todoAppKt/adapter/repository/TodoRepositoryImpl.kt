@@ -10,6 +10,8 @@ import com.github.yuk1ty.todoAppKt.application.repository.TodoRepository
 import com.github.yuk1ty.todoAppKt.domain.model.TodoId
 import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodo
 import com.github.yuk1ty.todoAppKt.shared.AppErrors
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
@@ -53,7 +55,9 @@ object TodoRepositoryImpl : TodoRepository {
                 .toErrorIf(
                     { it.insertedCount != 1 },
                     { AdapterErrors.InvalidAffectionResult("Affected row count was invalid: $it") }
-                )
+                ).bind()
+
+            Ok(Unit)
         }
 
     override suspend fun update(validatedTodo: ValidatedTodo): Result<Unit, AppErrors> = coroutineBinding {
@@ -83,6 +87,21 @@ object TodoRepositoryImpl : TodoRepository {
             .toErrorIf(
                 { it != 1 },
                 { AdapterErrors.InvalidAffectionResult("Affected row count was invalid: $it") }
-            )
+            ).bind()
+
+        Ok(Unit)
+    }
+
+    override suspend fun delete(id: TodoId): Result<Unit, AppErrors> = coroutineBinding {
+        runCatching {
+            TodoTable.deleteWhere { TodoTable.id.eq(id.value) }
+        }
+            .mapError { AdapterErrors.DatabaseError(it) }
+            .toErrorIf(
+                { it != 1 },
+                { AdapterErrors.InvalidAffectionResult("Affected row count was invalid: $it") }
+            ).bind()
+
+        Ok(Unit)
     }
 }

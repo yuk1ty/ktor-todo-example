@@ -46,4 +46,9 @@ class TodoApplicationService(
             repository.update(toBeUpdated)
         }
     }
+
+    suspend fun deleteTodo(command: TodoCommands.Delete): Result<Unit, AppErrors> =
+        conn.tryBeginWriteTransaction {
+            repository.delete(TodoId(command.id))
+        }
 }

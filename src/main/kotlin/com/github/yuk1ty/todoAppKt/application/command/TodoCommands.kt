@@ -19,4 +19,6 @@ object TodoCommands {
     }
 
     data class Update(val id: UUID, val title: String?, val description: String?, val due: LocalDateTime?, val status: String?)
+
+    data class Delete(val id: UUID)
 }

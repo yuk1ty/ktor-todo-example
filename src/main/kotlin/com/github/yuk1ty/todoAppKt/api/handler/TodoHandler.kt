@@ -7,6 +7,7 @@ import com.github.yuk1ty.todoAppKt.api.model.CreateTodoRequest
 import com.github.yuk1ty.todoAppKt.api.model.TodoResponse
 import com.github.yuk1ty.todoAppKt.api.model.UpdateTodoRequest
 import com.github.yuk1ty.todoAppKt.api.routing.API_V1
+import com.github.yuk1ty.todoAppKt.application.command.TodoCommands
 import com.github.yuk1ty.todoAppKt.application.service.TodoApplicationService
 import com.github.yuk1ty.todoAppKt.queryService.TodoQueryService
 import io.ktor.http.*
@@ -18,7 +19,6 @@ import io.ktor.server.resources.post
 import io.ktor.server.resources.put
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.coroutines.async
 import kotlinx.serialization.Contextual
 import org.koin.ktor.ext.inject
 import java.util.UUID
@@ -35,6 +35,9 @@ private sealed interface Todos {
 
     @Resource("/todos/{todoId}")
     data object EditTask : Todos
+
+    @Resource("/todos/{todoId}")
+    data object DeleteTask : Todos
 }
 
 private fun Route.todoHandler() {
@@ -67,6 +70,17 @@ private fun Route.todoHandler() {
                     HandlerErrors.InvalidPathParameter("$it")
                 }.bind()
             todoApplicationService.updateTodo(req.intoCommand(id)).bind()
+
+            call.respond(HttpStatusCode.OK)
+        }.getOrThrow()
+    }
+
+    delete<Todos.DeleteTask> {
+        coroutineBinding {
+            val id = runCatching { call.parameters["todoId"]?.let { UUID.fromString(it) } }.toErrorIfNull {
+                HandlerErrors.InvalidPathParameter("$it")
+            }.bind()
+            todoApplicationService.deleteTodo(TodoCommands.Delete(id)).bind()
 
             call.respond(HttpStatusCode.OK)
         }.getOrThrow()
