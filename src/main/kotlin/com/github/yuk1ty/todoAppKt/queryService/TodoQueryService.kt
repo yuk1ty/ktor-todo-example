@@ -14,7 +14,7 @@ class TodoQueryService(private val conn: DatabaseConn<Permission.ReadOnly>) {
         val allTodosFromDatabase = conn.beginReadTransaction {
             TodoTable.selectAll().map { TodoRow.fromResultRow(it) }.toList()
         }.bind()
-        val unvalidatedTodos = allTodosFromDatabase.map { it.intoDomain() }
+        val unvalidatedTodos = allTodosFromDatabase.map { it.intoQuery() }
         // TODO: handle all errors
         val validatedTodos = unvalidatedTodos.map { ValidatedTodoDTO(it) }.combine().bind()
 

@@ -1,6 +1,8 @@
 package com.github.yuk1ty.todoAppKt.shared.modules
 
 import com.github.yuk1ty.todoAppKt.adapter.error.AdapterErrors
+import com.github.yuk1ty.todoAppKt.api.error.HandlerErrors
+import com.github.yuk1ty.todoAppKt.application.error.ApplicationServiceErrors
 import com.github.yuk1ty.todoAppKt.domain.error.DomainErrors
 import com.github.yuk1ty.todoAppKt.shared.AppErrors
 import io.ktor.http.*
@@ -12,6 +14,10 @@ internal fun Application.registerExceptionHandlers() {
     install(StatusPages) {
         exception<AppErrors> { call, cause ->
             when (cause) {
+                is HandlerErrors.InvalidPathParameter -> call.respond(HttpStatusCode.BadRequest)
+
+                is ApplicationServiceErrors.EntityNotFound -> call.respond(HttpStatusCode.NotFound)
+
                 is DomainErrors.ValidationError -> call.respondText(
                     status = HttpStatusCode.BadRequest,
                     text = cause.why

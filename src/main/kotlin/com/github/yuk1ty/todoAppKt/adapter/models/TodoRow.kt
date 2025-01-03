@@ -1,6 +1,7 @@
 package com.github.yuk1ty.todoAppKt.adapter.models
 
 import com.github.yuk1ty.todoAppKt.adapter.database.TodoTable
+import com.github.yuk1ty.todoAppKt.domain.model.UnvalidatedTodo
 import com.github.yuk1ty.todoAppKt.domain.model.UnvalidatedTodoDTO
 import org.jetbrains.exposed.sql.ResultRow
 import java.time.LocalDateTime
@@ -27,7 +28,17 @@ data class TodoRow(
         )
     }
 
-    fun intoDomain(): UnvalidatedTodoDTO = UnvalidatedTodoDTO(
+    fun intoQuery(): UnvalidatedTodoDTO = UnvalidatedTodoDTO(
+        id = id,
+        title = title,
+        description = description,
+        due = due,
+        status = status,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+
+    fun intoDomain(): UnvalidatedTodo = UnvalidatedTodo(
         id = id,
         title = title,
         description = description,

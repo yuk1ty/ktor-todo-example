@@ -2,6 +2,7 @@ package com.github.yuk1ty.todoAppKt.adapter.database
 
 import com.github.michaelbull.result.*
 import com.github.yuk1ty.todoAppKt.adapter.error.AdapterErrors
+import com.github.yuk1ty.todoAppKt.shared.AppErrors
 import com.github.yuk1ty.todoAppKt.shared.utilities.newSuspendedTransactionWithExceptionHandling
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Transaction
@@ -20,7 +21,7 @@ value class DatabaseConn<K : Permission>(val inner: Database) {
     }
 }
 
-suspend fun <T> DatabaseConn<Permission.ReadOnly>.beginReadTransaction(statement: Transaction.() -> T): Result<T, AdapterErrors> {
+suspend fun <T> DatabaseConn<Permission.ReadOnly>.beginReadTransaction(statement: Transaction.() -> T): Result<T, AppErrors> {
     val conn = this.inner
     return runCatching {
         newSuspendedTransactionWithExceptionHandling(
@@ -33,7 +34,7 @@ suspend fun <T> DatabaseConn<Permission.ReadOnly>.beginReadTransaction(statement
     }.mapError { AdapterErrors.DatabaseError(it) }
 }
 
-suspend fun <T> DatabaseConn<Permission.ReadOnly>.tryBeginReadTransaction(statement: Transaction.() -> Result<T, AdapterErrors>): Result<T, AdapterErrors> {
+suspend fun <T> DatabaseConn<Permission.ReadOnly>.tryBeginReadTransaction(statement: Transaction.() -> Result<T, AppErrors>): Result<T, AppErrors> {
     val conn = this.inner
     return runCatching {
         newSuspendedTransactionWithExceptionHandling(
@@ -47,7 +48,7 @@ suspend fun <T> DatabaseConn<Permission.ReadOnly>.tryBeginReadTransaction(statem
 }
 
 // This isn't used in our implementation, but it's here for reference.
-//suspend fun <T> DatabaseConn<Permission.Writable>.beginWriteTransaction(statement: suspend Transaction.() -> T): Result<T, AdapterErrors> {
+//suspend fun <T> DatabaseConn<Permission.Writable>.beginWriteTransaction(statement: suspend Transaction.() -> T): Result<T, AppErrors> {
 //    val conn = this.inner
 //    return runCatching {
 //        newSuspendedTransactionWithExceptionHandling(
@@ -59,7 +60,7 @@ suspend fun <T> DatabaseConn<Permission.ReadOnly>.tryBeginReadTransaction(statem
 //    }.mapError { AdapterErrors.DatabaseError(it) }
 //}
 
-suspend fun <T> DatabaseConn<Permission.Writable>.tryBeginWriteTransaction(statement: suspend Transaction.() -> Result<T, AdapterErrors>): Result<T, AdapterErrors> {
+suspend fun <T> DatabaseConn<Permission.Writable>.tryBeginWriteTransaction(statement: suspend Transaction.() -> Result<T, AppErrors>): Result<T, AppErrors> {
     val conn = this.inner
     return runCatching {
         newSuspendedTransactionWithExceptionHandling(

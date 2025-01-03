@@ -9,5 +9,14 @@ Content-Type: application/json
 
 ###
 
+PUT http://localhost:8080/api/v1/todos/99e27cdf-4311-460c-9241-a59b235a60e5
+Content-Type: application/json
+
+{
+  "status": "Done"
+}
+
+###
+
 GET http://localhost:8080/api/v1/todos
 Accept: application/json

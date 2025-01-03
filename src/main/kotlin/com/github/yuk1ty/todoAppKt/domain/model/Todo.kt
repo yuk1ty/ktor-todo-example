@@ -53,6 +53,7 @@ data class ValidatedTodoDTO private constructor(
 }
 
 data class UnvalidatedTodo private constructor(
+    val id: UUID?,
     val title: String,
     val description: String?,
     val due: LocalDateTime?,
@@ -70,6 +71,26 @@ data class UnvalidatedTodo private constructor(
             updatedAt: LocalDateTime
         ): UnvalidatedTodo =
             UnvalidatedTodo(
+                id = null,
+                title = title,
+                description = description,
+                due = due,
+                status = status,
+                createdAt = createdAt,
+                updatedAt = updatedAt
+            )
+
+        operator fun invoke(
+            id: UUID,
+            title: String,
+            description: String?,
+            due: LocalDateTime?,
+            status: String,
+            createdAt: LocalDateTime,
+            updatedAt: LocalDateTime
+        ): UnvalidatedTodo =
+            UnvalidatedTodo(
+                id = id,
                 title = title,
                 description = description,
                 due = due,
@@ -99,7 +120,7 @@ data class ValidatedTodo private constructor(
                 { TodoStatus.fromString(status) },
             ) { validatedTitle, validatedDescription, validatedStatus ->
                 ValidatedTodo(
-                    id = TodoId(UUID.randomUUID()),
+                    id = TodoId(unvalidatedTodo.id ?: UUID.randomUUID()),
                     title = validatedTitle,
                     description = validatedDescription,
                     due = due?.let { TodoDue(it.atOffset(ZoneOffset.UTC)) },

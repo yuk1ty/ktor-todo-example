@@ -48,3 +48,20 @@ internal data class CreateTodoRequest(
         due = due
     )
 }
+
+@Serializable
+@OptIn(ExperimentalSerializationApi::class)
+internal data class UpdateTodoRequest(
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val title: String? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val description: String? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) @Contextual val due: LocalDateTime? = null,
+    @EncodeDefault(EncodeDefault.Mode.NEVER) val status: String? = null,
+) {
+    fun intoCommand(id: UUID): TodoCommands.Update = TodoCommands.Update(
+        id = id,
+        title = title,
+        description = description,
+        due = due,
+        status = status
+    )
+}
