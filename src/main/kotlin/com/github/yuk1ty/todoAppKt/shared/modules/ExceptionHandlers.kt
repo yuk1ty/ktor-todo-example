@@ -22,7 +22,7 @@ internal fun Application.registerExceptionHandlers() {
                     text = cause.errors.joinToString(", ")
                 )
 
-                is AdapterErrors.TransactionError -> {
+                is AdapterErrors.DatabaseError -> {
                     call.application.environment.log.error("Database-related error happened", cause.cause)
                     call.respond(HttpStatusCode.InternalServerError)
                 }

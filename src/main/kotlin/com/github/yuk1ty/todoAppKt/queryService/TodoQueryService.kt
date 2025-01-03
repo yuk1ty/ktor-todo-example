@@ -1,13 +1,9 @@
 package com.github.yuk1ty.todoAppKt.queryService
 
 import com.github.michaelbull.result.Result
-import com.github.michaelbull.result.binding
 import com.github.michaelbull.result.combine
 import com.github.michaelbull.result.coroutines.coroutineBinding
-import com.github.yuk1ty.todoAppKt.adapter.database.DatabaseConn
-import com.github.yuk1ty.todoAppKt.adapter.database.Permission
-import com.github.yuk1ty.todoAppKt.adapter.database.TodoTable
-import com.github.yuk1ty.todoAppKt.adapter.database.beginReadTransaction
+import com.github.yuk1ty.todoAppKt.adapter.database.*
 import com.github.yuk1ty.todoAppKt.adapter.models.TodoRow
 import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodoDTO
 import com.github.yuk1ty.todoAppKt.shared.AppErrors

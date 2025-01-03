@@ -56,20 +56,26 @@ data class UnvalidatedTodo private constructor(
     val title: String,
     val description: String?,
     val due: LocalDateTime?,
-    val status: String
+    val status: String,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime
 ) {
     companion object {
         operator fun invoke(
             title: String,
             description: String?,
             due: LocalDateTime?,
-            status: String
+            status: String,
+            createdAt: LocalDateTime,
+            updatedAt: LocalDateTime
         ): UnvalidatedTodo =
             UnvalidatedTodo(
                 title = title,
                 description = description,
                 due = due,
-                status = status
+                status = status,
+                createdAt = createdAt,
+                updatedAt = updatedAt
             )
     }
 }
@@ -79,7 +85,9 @@ data class ValidatedTodo private constructor(
     val title: String1024,
     val description: String2048?,
     val due: TodoDue?,
-    val status: TodoStatus
+    val status: TodoStatus,
+    val createdAt: OffsetDateTime,
+    val updatedAt: OffsetDateTime
 ) {
     companion object {
         operator fun invoke(
@@ -95,7 +103,9 @@ data class ValidatedTodo private constructor(
                     title = validatedTitle,
                     description = validatedDescription,
                     due = due?.let { TodoDue(it.atOffset(ZoneOffset.UTC)) },
-                    status = validatedStatus
+                    status = validatedStatus,
+                    createdAt = createdAt.atOffset(ZoneOffset.UTC),
+                    updatedAt = updatedAt.atOffset(ZoneOffset.UTC)
                 )
             }.mapError { DomainErrors.ValidationErrors(it) }
         }

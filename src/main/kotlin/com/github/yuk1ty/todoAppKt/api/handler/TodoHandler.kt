@@ -6,7 +6,7 @@ import com.github.michaelbull.result.getOrThrow
 import com.github.yuk1ty.todoAppKt.api.model.CreateTodoRequest
 import com.github.yuk1ty.todoAppKt.api.model.TodoResponse
 import com.github.yuk1ty.todoAppKt.api.routing.API_V1
-import com.github.yuk1ty.todoAppKt.applicationService.TodoApplicationService
+import com.github.yuk1ty.todoAppKt.application.service.TodoApplicationService
 import com.github.yuk1ty.todoAppKt.queryService.TodoQueryService
 import io.ktor.http.*
 import io.ktor.resources.*
@@ -47,7 +47,7 @@ private fun Route.todoHandler() {
     post<Todos.RegisterTask> {
         coroutineBinding {
             val req = runCatching { call.receive<CreateTodoRequest>() }.bind()
-            todoApplicationService.createTodo(req.intoDomain())
+            todoApplicationService.createTodo(req.intoCommand())
         }.getOrThrow()
         call.respond(HttpStatusCode.Created)
     }
