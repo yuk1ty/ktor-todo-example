@@ -1,4 +1,4 @@
-package com.github.yuk1ty.todoAppKt.application.repository
+package com.github.yuk1ty.todoAppKt.domain.repository
 
 import com.github.michaelbull.result.Result
 import com.github.yuk1ty.todoAppKt.domain.model.TodoId

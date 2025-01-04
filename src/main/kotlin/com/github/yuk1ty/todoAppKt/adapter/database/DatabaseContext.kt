@@ -3,7 +3,6 @@ package com.github.yuk1ty.todoAppKt.adapter.database
 import com.github.michaelbull.result.*
 import com.github.yuk1ty.todoAppKt.adapter.error.AdapterErrors
 import com.github.yuk1ty.todoAppKt.shared.AppErrors
-import com.github.yuk1ty.todoAppKt.shared.utilities.newSuspendedTransactionWithExceptionHandling
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Database
