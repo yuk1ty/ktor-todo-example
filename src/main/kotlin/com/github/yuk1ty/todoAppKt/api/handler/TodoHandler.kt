@@ -34,10 +34,10 @@ private sealed interface Todos {
     data object RegisterTask : Todos
 
     @Resource("/todos/{todoId}")
-    data object EditTask : Todos
+    data class EditTask(@Contextual val todoId: UUID) : Todos
 
     @Resource("/todos/{todoId}")
-    data object DeleteTask : Todos
+    data class DeleteTask(@Contextual val todoId: UUID) : Todos
 }
 
 private fun Route.todoHandler() {
@@ -62,25 +62,18 @@ private fun Route.todoHandler() {
         }.getOrThrow()
     }
 
-    put<Todos.EditTask> {
+    put<Todos.EditTask> { pathParam ->
         coroutineBinding {
             val req = runCatching { call.receive<UpdateTodoRequest>() }.bind()
-            val id =
-                runCatching { call.parameters["todoId"]?.let { UUID.fromString(it) } }.toErrorIfNull {
-                    HandlerErrors.InvalidPathParameter("$it")
-                }.bind()
-            todoApplicationService.updateTodo(req.intoCommand(id)).bind()
+            todoApplicationService.updateTodo(req.intoCommand(pathParam.todoId)).bind()
 
             call.respond(HttpStatusCode.OK)
         }.getOrThrow()
     }
 
-    delete<Todos.DeleteTask> {
+    delete<Todos.DeleteTask> { pathParam ->
         coroutineBinding {
-            val id = runCatching { call.parameters["todoId"]?.let { UUID.fromString(it) } }.toErrorIfNull {
-                HandlerErrors.InvalidPathParameter("$it")
-            }.bind()
-            todoApplicationService.deleteTodo(TodoCommands.Delete(id)).bind()
+            todoApplicationService.deleteTodo(TodoCommands.Delete(pathParam.todoId)).bind()
 
             call.respond(HttpStatusCode.OK)
         }.getOrThrow()
