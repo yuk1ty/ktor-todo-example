@@ -26,26 +26,27 @@ class TodoApplicationService(
         }
     }
 
-    suspend fun updateTodo(command: TodoCommands.Update): Result<Unit, AppErrors> = coroutineBinding {
+    suspend fun updateTodo(command: TodoCommands.Update): Result<Unit, AppErrors> =
         conn.tryBeginWriteTransaction {
-            val existingTodo =
-                repository.getById(TodoId(command.id))
-                    .toErrorIfNull { ApplicationServiceErrors.EntityNotFound(command.id) }
-                    .bind()
-            // TODO: Make update function to ValidatedTodo?
-            val toBeUpdated = UnvalidatedTodo(
-                id = existingTodo.id.value,
-                title = command.title ?: existingTodo.title.value,
-                description = command.description ?: existingTodo.description?.value,
-                due = command.due ?: existingTodo.due?.value?.toLocalDateTime(),
-                status = command.status ?: existingTodo.status.asString(),
-                createdAt = existingTodo.createdAt.toLocalDateTime(),
-                updatedAt = LocalDateTime.now()
-            ).let { ValidatedTodo(it) }.bind()
+            binding {
+                val existingTodo =
+                    repository.getById(TodoId(command.id))
+                        .toErrorIfNull { ApplicationServiceErrors.EntityNotFound(command.id) }
+                        .bind()
+                // TODO: Make update function to ValidatedTodo?
+                val toBeUpdated = UnvalidatedTodo(
+                    id = existingTodo.id.value,
+                    title = command.title ?: existingTodo.title.value,
+                    description = command.description ?: existingTodo.description?.value,
+                    due = command.due ?: existingTodo.due?.value?.toLocalDateTime(),
+                    status = command.status ?: existingTodo.status.asString(),
+                    createdAt = existingTodo.createdAt.toLocalDateTime(),
+                    updatedAt = LocalDateTime.now()
+                ).let { ValidatedTodo(it) }.bind()
 
-            repository.update(toBeUpdated)
+                repository.update(toBeUpdated)
+            }
         }
-    }
 
     suspend fun deleteTodo(command: TodoCommands.Delete): Result<Unit, AppErrors> =
         conn.tryBeginWriteTransaction {
