@@ -35,7 +35,8 @@ dependencies {
     implementation(libs.exposed.jdbc)
     implementation(libs.exposed.java.time)
     implementation(libs.postgres)
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
 }
 
 // Shut up calling `copy` function against data classes that have private constructors.
