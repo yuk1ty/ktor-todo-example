@@ -7,7 +7,7 @@ import com.github.yuk1ty.todoAppKt.adapter.database.Permission
 import com.github.yuk1ty.todoAppKt.adapter.database.tryBeginWriteTransaction
 import com.github.yuk1ty.todoAppKt.application.command.TodoCommands
 import com.github.yuk1ty.todoAppKt.application.error.ApplicationServiceErrors
-import com.github.yuk1ty.todoAppKt.domain.repository.TodoRepository
+import com.github.yuk1ty.todoAppKt.application.repository.TodoRepository
 import com.github.yuk1ty.todoAppKt.domain.model.TodoId
 import com.github.yuk1ty.todoAppKt.domain.model.UnvalidatedTodo
 import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodo

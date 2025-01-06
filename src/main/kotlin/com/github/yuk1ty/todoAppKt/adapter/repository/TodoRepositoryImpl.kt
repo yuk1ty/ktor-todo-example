@@ -5,7 +5,7 @@ import com.github.michaelbull.result.runCatching
 import com.github.yuk1ty.todoAppKt.adapter.database.TodoTable
 import com.github.yuk1ty.todoAppKt.adapter.error.AdapterErrors
 import com.github.yuk1ty.todoAppKt.adapter.models.TodoRow
-import com.github.yuk1ty.todoAppKt.domain.repository.TodoRepository
+import com.github.yuk1ty.todoAppKt.application.repository.TodoRepository
 import com.github.yuk1ty.todoAppKt.domain.model.TodoId
 import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodo
 import com.github.yuk1ty.todoAppKt.shared.AppErrors
