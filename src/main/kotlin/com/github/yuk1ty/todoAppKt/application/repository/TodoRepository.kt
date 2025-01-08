@@ -6,8 +6,8 @@ import com.github.yuk1ty.todoAppKt.domain.model.ValidatedTodo
 import com.github.yuk1ty.todoAppKt.shared.AppErrors
 
 interface TodoRepository {
-    fun getById(id: TodoId): Result<ValidatedTodo?, AppErrors>
-    fun create(validatedTodo: ValidatedTodo): Result<Unit, AppErrors>
-    fun update(validatedTodo: ValidatedTodo): Result<Unit, AppErrors>
-    fun delete(id: TodoId): Result<Unit, AppErrors>
+    suspend fun getById(id: TodoId): Result<ValidatedTodo?, AppErrors>
+    suspend fun create(validatedTodo: ValidatedTodo): Result<Unit, AppErrors>
+    suspend fun update(validatedTodo: ValidatedTodo): Result<Unit, AppErrors>
+    suspend fun delete(id: TodoId): Result<Unit, AppErrors>
 }

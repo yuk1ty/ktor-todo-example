@@ -17,7 +17,7 @@ import org.jetbrains.exposed.sql.update
 import java.time.LocalDateTime
 
 object TodoRepositoryImpl : TodoRepository {
-    override fun getById(id: TodoId): Result<ValidatedTodo?, AppErrors> = binding {
+    override suspend fun getById(id: TodoId): Result<ValidatedTodo?, AppErrors> = binding {
         val row = runCatching {
             TodoTable.selectAll().where { TodoTable.id.eq(id.value) }.singleOrNull()
         }.map { it?.let { TodoRow.fromResultRow(it) } }.mapError { AdapterErrors.DatabaseError(it) }.bind()
@@ -26,7 +26,7 @@ object TodoRepositoryImpl : TodoRepository {
         validatedTodo
     }
 
-    override fun create(validatedTodo: ValidatedTodo): Result<Unit, AppErrors> =
+    override suspend fun create(validatedTodo: ValidatedTodo): Result<Unit, AppErrors> =
         binding {
             val row = validatedTodo.run {
                 TodoRow(
@@ -59,7 +59,7 @@ object TodoRepositoryImpl : TodoRepository {
             Ok(Unit)
         }
 
-    override fun update(validatedTodo: ValidatedTodo): Result<Unit, AppErrors> = binding {
+    override suspend fun update(validatedTodo: ValidatedTodo): Result<Unit, AppErrors> = binding {
         val row = validatedTodo.run {
             TodoRow(
                 id = id.value,
@@ -91,7 +91,7 @@ object TodoRepositoryImpl : TodoRepository {
         Ok(Unit)
     }
 
-    override fun delete(id: TodoId): Result<Unit, AppErrors> =
+    override suspend fun delete(id: TodoId): Result<Unit, AppErrors> =
         runCatching {
             TodoTable.deleteWhere { TodoTable.id.eq(id.value) }
         }

@@ -28,12 +28,10 @@ class TodoApplicationService(
 
     suspend fun updateTodo(command: TodoCommands.Update): Result<Unit, AppErrors> =
         conn.tryBeginWriteTransaction {
-            binding {
-                val existingTodo =
-                    repository.getById(TodoId(command.id))
-                        .toErrorIfNull { ApplicationServiceErrors.EntityNotFound(command.id) }
-                        .bind()
-                // TODO: Make update function to ValidatedTodo?
+            coroutineBinding {
+                val existingTodo = repository.getById(TodoId(command.id))
+                    .toErrorIfNull { ApplicationServiceErrors.EntityNotFound(command.id) }
+                    .bind()
                 val toBeUpdated = UnvalidatedTodo(
                     id = existingTodo.id.value,
                     title = command.title ?: existingTodo.title.value,
