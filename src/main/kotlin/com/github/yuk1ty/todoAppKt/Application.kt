@@ -8,5 +8,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 fun Application.module() {
     registerAppModules(environment.config)
+    // Turn on in the future
+    // openAPIRoutes()
     todoAppRoutes()
 }
