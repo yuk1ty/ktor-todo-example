@@ -8,7 +8,10 @@ import com.github.yuk1ty.todoAppKt.shared.modules.registerSerializers
 import io.ktor.server.application.*
 
 fun Application.registerAppModules(cfg: AppConfig) {
-    val (readConn, writeConn) = establishDatabaseConnection(cfg)
+    val (readConn, writeConn) = establishDatabaseConnection(
+        readConfig = cfg.readableDatabase,
+        writeConfig = cfg.writableDatabase
+    )
     registerDependencies(readConn, writeConn)
     registerSerializers()
     registerExceptionHandlers()
